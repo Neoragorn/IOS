@@ -11,6 +11,11 @@ public class Client {
 	private Calendar datenaissance;
 	private List<Account> listCount = new ArrayList<Account>();
 
+	public Client()
+	{
+		
+	}
+	
 	public Client(String nom, String prenom, Calendar datenaissance) {
 		super();
 		this.nom = nom;
@@ -45,8 +50,25 @@ public class Client {
 	public boolean equals(Client cl)
 	{
 		if (cl.getPrenom().equals(this.prenom) && cl.getNom().equals(this.nom) && cl.getDatenaissance().equals(this.datenaissance))
-			//if (this.listCount.equals(cl.getListCount()))
+			return true;
+		return false;
+	}
+
+	public boolean equalsWithAccount(Client cl)
+	{
+		if (cl.getPrenom().equals(this.prenom) && cl.getNom().equals(this.nom) && cl.getDatenaissance().equals(this.datenaissance))
+			if (this.listCount.equals(cl.getListCount()))		
 				return true;
+		return false;
+	}
+	
+	public boolean checkTypeAcc(AccountType type)	
+	{
+		for (Account acc : this.listCount)
+		{
+			if (acc.getType().equals(type))
+				return true;
+		}
 		return false;
 	}
 }
