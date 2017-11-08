@@ -32,12 +32,18 @@ public class Main {
 		bank.createAccount(soso, AccountType.LIVRET_A);
 		bank.createAccount(vinz, AccountType.LIVRET_A);
 		
-		List<Account> listacc = soso.getListCount();
-		bank.addMoney(listacc.get(0), 100);
+		List<Account> listaccSoso = soso.getListCount();
+		List<Account> listaccVinz = vinz.getListCount();
+		bank.addMoney(listaccSoso.get(0), 100);
+
+		Database.getInstance().displayDatabase();
 		
 		bank.createAccount(soso, AccountType. LIVRET_JEUNE);
-		bank.virementInternAcc(soso, AccountType.LIVRET_A, AccountType.LIVRET_JEUNE, 50);
+		bank.virementInternAcc(soso, AccountType.LIVRET_A, AccountType.LIVRET_JEUNE, 20);
 		
+		Database.getInstance().displayDatabase();
+		
+		bank.virementBetweenAcc(soso, listaccSoso.get(0), vinz, listaccVinz.get(0), 20);
 		Database.getInstance().displayDatabase();
 	}
 }
