@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1506096242000
+Build-Jdk: 1.8.0_144
+Built-By: casier
+Bundle-Activator: fr.lille.ios.Activator
+Bundle-ManifestVersion: 2
+Bundle-Name: auto-deploy OSGi Bundle
+Bundle-SymbolicName: fr.lille1.ios.auto-deploy
+Bundle-Version: 1.0.0
+Created-By: Apache Maven Bundle Plugin
+Import-Package: org.osgi.framework;version="[1.6,2)"
+Tool: Bnd-1.50.0

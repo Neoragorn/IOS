@@ -1,0 +1,64 @@
+
+package ios.foot;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Classe Java pour anonymous complex type.
+ * 
+ * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * 
+ * <pre>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="GroupsResult" type="{http://footballpool.dataaccess.eu}ArrayOftGroupInfo"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+    "groupsResult"
+})
+@XmlRootElement(name = "GroupsResponse")
+public class GroupsResponse {
+
+    @XmlElement(name = "GroupsResult", required = true)
+    protected ArrayOftGroupInfo groupsResult;
+
+    /**
+     * Obtient la valeur de la propriété groupsResult.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ArrayOftGroupInfo }
+     *     
+     */
+    public ArrayOftGroupInfo getGroupsResult() {
+        return groupsResult;
+    }
+
+    /**
+     * Définit la valeur de la propriété groupsResult.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ArrayOftGroupInfo }
+     *     
+     */
+    public void setGroupsResult(ArrayOftGroupInfo value) {
+        this.groupsResult = value;
+    }
+
+}
