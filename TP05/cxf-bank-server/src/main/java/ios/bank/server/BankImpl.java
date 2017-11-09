@@ -339,4 +339,10 @@ public class BankImpl implements IBank{
 
 		throw new ClientStillHasAnAccountException("Suppression du client impossible. Le client possède toujours des comptes non-fermés");		
 	}
+
+	@Override
+	public void displayDatabase() {
+		Database.getInstance().displayDatabase();
+		
+	}
 }

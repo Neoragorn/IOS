@@ -47,7 +47,7 @@ public class Database {
 		Database.instance = instance;
 	}
 	
-	public void displayDatabase()
+	public  void displayDatabase()
 	{
 		System.out.println("Displaying database information\nAccount information");
 		for (Account acc : listAcc)

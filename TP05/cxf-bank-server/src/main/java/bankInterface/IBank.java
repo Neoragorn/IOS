@@ -32,4 +32,5 @@ public interface IBank {
 	public void virementBetweenAcc(@WebParam(name="client") Client cl1, @WebParam(name="compte1") Account acc1, @WebParam(name="client") Client cl2, @WebParam(name="compte2") Account acc2,@WebParam(name="amount") int amount) throws AccountNotLinkedToTheClientException, AccountInRedException, SoldeIsNotCorrectException, ClientDoNotExistException, AccountDoNoExistException;
 	public int closeAccount(@WebParam(name="compte") Account acc) throws AccountDoNoExistException;
 	public void eraseClient(@WebParam(name="client") Client cl1) throws ClientStillHasAnAccountException, ClientDoNotExistException;
+	public void displayDatabase();
 }
