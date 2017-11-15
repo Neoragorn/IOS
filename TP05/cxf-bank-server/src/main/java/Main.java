@@ -32,9 +32,10 @@ public class Main {
 		bank.createAccount(soso, AccountType.LIVRET_A);
 		bank.createAccount(vinz, AccountType.LIVRET_A);
 		
-		List<Account> listaccSoso = soso.getListCount();
-		List<Account> listaccVinz = vinz.getListCount();
-		bank.addMoney(listaccSoso.get(0), 100);
+		Account accSoso = bank.recoverAccount(soso, AccountType.LIVRET_A);
+		Account accVinz = bank.recoverAccount(vinz, AccountType.LIVRET_A);
+		System.out.println(accSoso.getClient().getPrenom());
+		/*bank.addMoney(listaccSoso.get(0), 100);
 
 		Database.getInstance().displayDatabase();
 		
@@ -44,6 +45,6 @@ public class Main {
 		Database.getInstance().displayDatabase();
 		
 		bank.virementBetweenAcc(soso, listaccSoso.get(0), vinz, listaccVinz.get(0), 20);
-		Database.getInstance().displayDatabase();
-	}
+		Database.getInstance().displayDatabase(); */
+	}  
 }

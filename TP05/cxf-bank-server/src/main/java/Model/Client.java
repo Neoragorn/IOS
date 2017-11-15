@@ -15,6 +15,12 @@ public class Client {
 	{
 		
 	}
+
+	public Client(String nom, String prenom) {
+		super();
+		this.nom = nom;
+		this.prenom = prenom;
+	}
 	
 	public Client(String nom, String prenom, Calendar datenaissance) {
 		super();
@@ -22,6 +28,7 @@ public class Client {
 		this.prenom = prenom;
 		this.datenaissance = datenaissance;
 	}
+	
 	public String getNom() {
 		return nom;
 	}

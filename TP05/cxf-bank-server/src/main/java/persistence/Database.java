@@ -14,7 +14,8 @@ public class Database {
 	private List<Client> ListClient = new ArrayList<Client>();
 	
 	public Database() {
-
+		listAcc.clear();
+		ListClient.clear();
 	}
 	
 	
@@ -47,25 +48,27 @@ public class Database {
 		Database.instance = instance;
 	}
 	
-	public  void displayDatabase()
+	public  String displayDatabase()
 	{
-		System.out.println("Displaying database information\nAccount information");
+		String information = "";
+		information = information + "Displaying database information\nAccount information\n";
 		for (Account acc : listAcc)
 		{
-			System.out.println(" Account Client : " + acc.getClient().getPrenom() + "  solde : " + acc.getSolde() + " // type => " + acc.getType());
+			information = information +" Account Client : " + acc.getClient().getPrenom() + "  solde : " + acc.getSolde() + " // type => " + acc.getType() + "\n";
 		}
 		
-		System.out.println("--------------------------------------------------\nClient Information");
+		information = information + "--------------------------------------------------\nClient Information\n";
 		for (Client cl : ListClient)
 		{
-			System.out.println("Client : " + cl.getPrenom());
+			information = information + "Client : " + cl.getPrenom() + "\n";
 			for (Account acc : cl.getListCount())
 			{
-				System.out.println("account of client : " + acc.getType());
+				information = information + "account of client : " + acc.getType() + "\n";
 			}
 		}
 		
-		System.out.println("Ending database information");
-		System.out.println("--------------------------------------------------");
+		information = information + "Ending database information\n";
+		information = information + "--------------------------------------------------\n";
+		return information;
 	}
 }

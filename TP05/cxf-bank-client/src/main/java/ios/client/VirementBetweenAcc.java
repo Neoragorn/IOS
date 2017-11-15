@@ -16,8 +16,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="client" type="{http://bankInterface/}client" minOccurs="0"/&gt;
+ *         &lt;element name="client1" type="{http://bankInterface/}client" minOccurs="0"/&gt;
  *         &lt;element name="compte1" type="{http://bankInterface/}account" minOccurs="0"/&gt;
+ *         &lt;element name="client2" type="{http://bankInterface/}client" minOccurs="0"/&gt;
  *         &lt;element name="compte2" type="{http://bankInterface/}account" minOccurs="0"/&gt;
  *         &lt;element name="amount" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
  *       &lt;/sequence&gt;
@@ -30,40 +31,42 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "virementBetweenAcc", propOrder = {
-    "client",
+    "client1",
     "compte1",
+    "client2",
     "compte2",
     "amount"
 })
 public class VirementBetweenAcc {
 
-    protected Client client;
+    protected Client client1;
     protected Account compte1;
+    protected Client client2;
     protected Account compte2;
     protected int amount;
 
     /**
-     * Obtient la valeur de la propriété client.
+     * Obtient la valeur de la propriété client1.
      * 
      * @return
      *     possible object is
      *     {@link Client }
      *     
      */
-    public Client getClient() {
-        return client;
+    public Client getClient1() {
+        return client1;
     }
 
     /**
-     * Définit la valeur de la propriété client.
+     * Définit la valeur de la propriété client1.
      * 
      * @param value
      *     allowed object is
      *     {@link Client }
      *     
      */
-    public void setClient(Client value) {
-        this.client = value;
+    public void setClient1(Client value) {
+        this.client1 = value;
     }
 
     /**
@@ -88,6 +91,30 @@ public class VirementBetweenAcc {
      */
     public void setCompte1(Account value) {
         this.compte1 = value;
+    }
+
+    /**
+     * Obtient la valeur de la propriété client2.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Client }
+     *     
+     */
+    public Client getClient2() {
+        return client2;
+    }
+
+    /**
+     * Définit la valeur de la propriété client2.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Client }
+     *     
+     */
+    public void setClient2(Client value) {
+        this.client2 = value;
     }
 
     /**

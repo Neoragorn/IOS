@@ -29,8 +29,8 @@ public interface IBank {
 	public int removeMoney(@WebParam(name="compte") Account acc, @WebParam(name="amount") int amount) throws AccountDoNoExistException, SoldeIsNotCorrectException, AccountInRedException;
 	public int displaySolde(@WebParam(name="compte") Account acc) throws AccountDoNoExistException;
 	public void virementInternAcc(@WebParam(name="client") Client cl1, @WebParam(name="typecompte1") AccountType acc1, @WebParam(name="typecompte2") AccountType acc2,@WebParam(name="amount") int amount) throws AccountNotLinkedToTheClientException, AccountInRedException, SoldeIsNotCorrectException, ClientDoNotExistException, AccountDoNoExistException;
-	public void virementBetweenAcc(@WebParam(name="client") Client cl1, @WebParam(name="compte1") Account acc1, @WebParam(name="client") Client cl2, @WebParam(name="compte2") Account acc2,@WebParam(name="amount") int amount) throws AccountNotLinkedToTheClientException, AccountInRedException, SoldeIsNotCorrectException, ClientDoNotExistException, AccountDoNoExistException;
+	public void virementBetweenAcc(@WebParam(name="client1") Client cl1, @WebParam(name="compte1") Account acc1, @WebParam(name="client2") Client cl2, @WebParam(name="compte2") Account acc2, @WebParam(name="amount") int amount) throws AccountNotLinkedToTheClientException, AccountInRedException, SoldeIsNotCorrectException, ClientDoNotExistException, AccountDoNoExistException;
 	public int closeAccount(@WebParam(name="compte") Account acc) throws AccountDoNoExistException;
 	public void eraseClient(@WebParam(name="client") Client cl1) throws ClientStillHasAnAccountException, ClientDoNotExistException;
-	public void displayDatabase();
+	public String displayDatabase();
 }

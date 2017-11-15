@@ -96,19 +96,26 @@ public class BankImpl implements IBank{
 		if (!check)
 			throw new ClientDoNotExistException("Client n'existe pas");
 
+		check = false;
 		for (AccountType type : AccountType.values())
 		{
 			if (acc.equals(type))
 				check = true;
 		}
+		
 		if (!check)
 			throw new TypeOfAccountDoNotExistException("Le type de compte spécifié n'existe pas");
-
+		check = false;
 		for (Account cmpt : cl.getListCount())
 		{
+			System.out.println("Account type is => " + cmpt.getType() + " and acc is " + acc);
 			if (acc.equals(cmpt.getType()))
+			{
+				check = true;
 				return cmpt;
+			}
 		}
+		
 		throw new AccountDoNoExistException("Ce type de compte n'existe pas pour ce client");
 	}
 
@@ -286,8 +293,11 @@ public class BankImpl implements IBank{
 		if (!check1 || !check2)
 			throw new ClientDoNotExistException("L'un des clients n'existe pas");
 			
-		if (!check3 || !check4)
-			throw new AccountDoNoExistException("L'un des comptes n'existe pas");
+		if (!check3)
+			throw new AccountDoNoExistException("Le compte de " + cl1.getNom() + " n'existe pas");
+		
+		if (!check4)
+			throw new AccountDoNoExistException("Le compte de " + cl2.getNom() + " n'existe pas");
 		
 		if (accTmp1.getSolde() - amount < 0)
 			throw new AccountInRedException("Opération impossible. Découvert non autorisé");
@@ -341,8 +351,8 @@ public class BankImpl implements IBank{
 	}
 
 	@Override
-	public void displayDatabase() {
-		Database.getInstance().displayDatabase();
+	public String displayDatabase() {
+		return Database.getInstance().displayDatabase();
 		
 	}
 }
