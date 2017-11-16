@@ -33,4 +33,5 @@ public interface IBank {
 	public int closeAccount(@WebParam(name="compte") Account acc) throws AccountDoNoExistException;
 	public void eraseClient(@WebParam(name="client") Client cl1) throws ClientStillHasAnAccountException, ClientDoNotExistException;
 	public String displayDatabase();
+	public void emptyDatabase();
 }

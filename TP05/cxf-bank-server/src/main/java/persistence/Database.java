@@ -71,4 +71,10 @@ public class Database {
 		information = information + "--------------------------------------------------\n";
 		return information;
 	}
+	
+	public void emptyData()
+	{
+		this.listAcc.clear();
+		this.ListClient.clear();
+	}
 }

@@ -28,7 +28,7 @@ public class BankServiceClient {
 		
 		}
 	public ClientProxyFactoryBean getClprox() {
-		return clprox;
+		return clprox;	
 	}
 	public void setClprox(ClientProxyFactoryBean clprox) {
 		this.clprox = clprox;

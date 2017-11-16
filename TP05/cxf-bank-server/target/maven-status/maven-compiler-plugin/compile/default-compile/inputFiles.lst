@@ -1,0 +1,17 @@
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Model/Account.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/TypeOfAccountDoNotExistException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/ClientAlreadyExistException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/ClientStillHasAnAccountException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/AccountDoNoExistException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/persistence/Database.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/ios/bank/server/BankImpl.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/SoldeIsNotCorrectException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Model/AccountType.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/AccountInRedException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/bankInterface/IBank.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Main.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Model/Client.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/TypeOfAccountAlreadyExistForClientException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/ClientDoNotExistException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Exception/AccountNotLinkedToTheClientException.java
+/home/m2miage/casier/Documents/IOS/TP05/cxf-bank-server/src/main/java/Model/ManageException.java

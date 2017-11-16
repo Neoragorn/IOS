@@ -36,55 +36,56 @@ public class Main {
 		
 		IBank ibank = (IBank) bank.getInterfaceBank();
 		
-		System.out.println(ibank.displayDatabase());
+		//Vidage des données de la database pour éviter de restart le serveur
+		ibank.emptyDatabase();
 		
-		//On crée le client soso
+		/* Creation de client + compte associé */
+		Client vinz = ibank.createClient("Vinz", "Pwet", date2);
+		Account accVinz = ibank.createAccount(vinz, AccountType.LIVRET_A);	
 		
 		Client soso = ibank.createClient("Soso", "cas", date2);
-
-		ibank.createAccount(soso, AccountType.LIVRET_A);
+		Account accSoso = ibank.createAccount(soso, AccountType.LIVRET_A);
+		
+		System.out.println("--------------CREATION DONE---------------");
+		
 		ibank.createAccount(soso, AccountType.LIVRET_JEUNE);
+		
 		System.out.println(ibank.displayDatabase());
+		
+		/*Ajout d'argent sur le compte de soso  et vinz*/		
 
-		
-		Client vinz = ibank.createClient("Vinz", "Pwet", date2);
-		
-
-		//on cree le client Vinz
-		ibank.createAccount(vinz, AccountType.LIVRET_A);
-
-		vinz = ibank.recoverClient("Vinz", "Pwet", date2);
-		System.out.println("test 3 Done");
-		
-		soso = ibank.recoverClient("Soso", "cas", date2);
-		Account accSoso = ibank.recoverAccount(soso, AccountType.LIVRET_A);
-		
-		System.out.println("test 4 Done");				
-		
-		Account accVinz = ibank.recoverAccount(vinz, AccountType.LIVRET_A);
-
-		System.out.println("test 5 Done");
-		
+		//soso = ibank.recoverClient("Soso", "cas", date2);		
+		accSoso = ibank.recoverAccount(soso, AccountType.LIVRET_A);
 		ibank.addMoney(accSoso, 100);
-		soso = ibank.recoverClient("Soso", "cas", date2);
 		
-		System.out.println("test 6 Done");
+		vinz = ibank.recoverClient("Vinz", "Pwet", date2);		
+		accVinz = ibank.recoverAccount(vinz, AccountType.LIVRET_A);
+		ibank.addMoney(accVinz, 50);
+		
+		/*Retrait d'argent sur le compte de soso*/
+		accSoso = ibank.recoverAccount(soso, AccountType.LIVRET_A);
+		ibank.removeMoney(accSoso, 10);
 		
 		System.out.println(ibank.displayDatabase());
-
-		System.out.println("test 7 Done");
+		
+		
+		/*Virement interne sur le compte de soso */
 		
 		ibank.virementInternAcc(soso, AccountType.LIVRET_A, AccountType.LIVRET_JEUNE, 20);
 		
-		soso = ibank.recoverClient("Soso", "cas", date2);
-		accSoso = ibank.recoverAccount(soso, AccountType.LIVRET_A);
-		System.out.println("test 9 Done");
-		
 		System.out.println(ibank.displayDatabase());
+		
+		/* virement entre le compte de soso et vinz
+		 * 
+		 */
+		soso = ibank.recoverClient("Soso", "cas", date2);	
+		vinz = ibank.recoverClient("Vinz", "Pwet", date2);	
+		accVinz = ibank.recoverAccount(vinz, AccountType.LIVRET_A);
+		accSoso = ibank.recoverAccount(soso, AccountType.LIVRET_A);
 		
 		ibank.virementBetweenAcc(soso, accSoso, vinz, accVinz, 10);
 		
-		System.out.println("test 10 Done");
+
 		System.out.println(ibank.displayDatabase());
 	}
 }

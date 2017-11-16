@@ -15,6 +15,7 @@ import Exception.TypeOfAccountDoNotExistException;
 import Model.Account;
 import Model.AccountType;
 import Model.Client;
+import Model.ManageException;
 import bankInterface.IBank;
 import persistence.Database;
 
@@ -24,11 +25,8 @@ public class BankImpl implements IBank{
 	public Client createClient(String prenom, String nom, Calendar date) throws ClientAlreadyExistException {
 		List<Client> list = Database.getInstance().getListClient();
 		Client clTmp = new Client(nom, prenom, date);
-		for (Client cl : list)
-		{
-			if (cl.equals(clTmp))				
-				throw new ClientAlreadyExistException("Ce client existe déja sous ce prenom, nom et date de naissance");
-		}
+		if (ManageException.checkClientAlreadyExist(list, clTmp))	
+			throw new ClientAlreadyExistException("Ce client existe déja sous ce prenom, nom et date de naissance");
 		Database.getInstance().getListClient().add(clTmp);
 		return clTmp;
 	}
@@ -37,48 +35,32 @@ public class BankImpl implements IBank{
 	public Client recoverClient(String prenom, String nom, Calendar date) throws ClientDoNotExistException {
 		List<Client> list = Database.getInstance().getListClient();	
 
-		for (Client cl : list)
-		{
-			if (cl.getPrenom().equals(prenom) && cl.getNom().equals(nom) && cl.getDatenaissance().equals(date))
-				return cl;
-		}
-		throw new ClientDoNotExistException("Client non trouvé");
+		Client cl = ManageException.checkClientExist(list, prenom, nom, date);
+
+		if (cl == null)
+			throw new ClientDoNotExistException("Client non trouvé");
+		
+		return cl;
 	}
 
 	@Override
 	public Account createAccount(Client cl, AccountType acc) throws ClientDoNotExistException, TypeOfAccountDoNotExistException, TypeOfAccountAlreadyExistForClientException {
 		List<Client> list = Database.getInstance().getListClient();
-		boolean check = false;
-		int index = 0;
 
 		//Verification client existe
-		for (Client cl2 : list)
-		{
-			if (cl2.equals(cl))
-			{
-				check = true;
-				break;
-			}
-			index++;
-		}
-		if (!check)
+		Client clTmp = ManageException.checkClientExistInData(list, cl);
+		if (clTmp == null)
 			throw new ClientDoNotExistException("Client n'existe pas");
-
 		//verification type de compte
-		for (AccountType type : AccountType.values())
-		{
-			if (acc.equals(type))
-				check = true;
-		}
-		if (!check)
+		if (!ManageException.checkAccountType(acc))
 			throw new TypeOfAccountDoNotExistException("Ce type de compte n'existe pas");
 
 		//verification client a deja ce type de compte
-		if (cl.checkTypeAcc(acc))
+		if (clTmp.checkTypeAcc(acc))
 			throw new TypeOfAccountAlreadyExistForClientException("Le Client possède déjà un compte de ce type");
 
 		Account newAcc = new Account(cl, acc);
-		Database.getInstance().getListClient().get(index).getListCount().add(newAcc);
+		Database.getInstance().getListClient().get(Database.getInstance().getListClient().indexOf(clTmp)).getListCount().add(newAcc);
 		Database.getInstance().getListAcc().add(newAcc);
 		return newAcc;
 	}
@@ -86,54 +68,32 @@ public class BankImpl implements IBank{
 	@Override
 	public Account recoverAccount(Client cl, AccountType acc) throws ClientDoNotExistException, TypeOfAccountDoNotExistException, AccountDoNoExistException {
 		List<Client> list = Database.getInstance().getListClient();
-		boolean check = false;
 
-		for (Client cl2 : list)
-		{
-			if (cl2.equals(cl))
-				check = true;
-		}
-		if (!check)
+		Client clTmp = ManageException.checkClientExistInData(list, cl);
+		if (clTmp == null)
 			throw new ClientDoNotExistException("Client n'existe pas");
+		if (!ManageException.checkAccountType(acc))
+			throw new TypeOfAccountDoNotExistException("Ce type de compte n'existe pas");
 
-		check = false;
-		for (AccountType type : AccountType.values())
-		{
-			if (acc.equals(type))
-				check = true;
-		}
-		
-		if (!check)
-			throw new TypeOfAccountDoNotExistException("Le type de compte spécifié n'existe pas");
-		check = false;
-		for (Account cmpt : cl.getListCount())
-		{
-			System.out.println("Account type is => " + cmpt.getType() + " and acc is " + acc);
-			if (acc.equals(cmpt.getType()))
-			{
-				check = true;
-				return cmpt;
-			}
-		}
-		
-		throw new AccountDoNoExistException("Ce type de compte n'existe pas pour ce client");
+		Account cmpt = ManageException.AccounTExistForClient(clTmp, acc);
+
+		if (cmpt == null)		
+			throw new AccountDoNoExistException("Ce type de compte n'existe pas pour ce client");
+		return cmpt;
 	}
 
 	@Override
 	public int addMoney(Account acc, int amount) throws AccountDoNoExistException, SoldeIsNotCorrectException {
 		List<Account> list = Database.getInstance().getListAcc();
 
-		if (amount <= 0)
+		if (!ManageException.AmountIsRight(amount))
 			throw new SoldeIsNotCorrectException("Le montant doit être supérieur à 0");
-		for (Account cmpt : list)
-		{
-			if (acc.equals(cmpt))
-			{
-				cmpt.setSolde(acc.getSolde() + amount);
-				return cmpt.getSolde();
-			}
-		}
-		throw new AccountDoNoExistException("Ce compte n'existe pas");
+
+		Account ac = ManageException.AccountExist(list, acc);
+		if (ac == null)
+			throw new AccountDoNoExistException("Ce compte n'existe pas");
+		ac.setSolde(acc.getSolde() + amount);
+		return ac.getSolde();
 	}
 
 	@Override
@@ -141,22 +101,18 @@ public class BankImpl implements IBank{
 			throws AccountDoNoExistException, SoldeIsNotCorrectException, AccountInRedException {
 		List<Account> list = Database.getInstance().getListAcc();
 
-		if (amount <= 0)
+		if (!ManageException.AmountIsRight(amount))
 			throw new SoldeIsNotCorrectException("Le montant doit être supérieur à 0");
 
-		for (Account cmpt : list)
-		{
-			if (acc.equals(cmpt))
-			{
-				if (acc.getSolde() - amount < 0)
-				{
-					throw new AccountInRedException("Impossible de retirer, découvert non autorisé");
-				}
-				cmpt.setSolde(cmpt.getSolde() - amount);
-				return cmpt.getSolde();
-			}
-		}
-		throw new AccountDoNoExistException("Ce compte n'existe pas");
+		Account ac = ManageException.AccountExist(list, acc);
+		if (ac == null)
+			throw new AccountDoNoExistException("Ce compte n'existe pas");
+
+		if (ManageException.AccountIsInRed(acc, amount))
+			throw new AccountInRedException("Impossible de retirer, découvert non autorisé");
+
+		ac.setSolde(acc.getSolde() - amount);
+		return acc.getSolde();
 	}
 
 	@Override
@@ -175,56 +131,31 @@ public class BankImpl implements IBank{
 	public void virementInternAcc(Client cl1, AccountType acc1, AccountType acc2, int amount)
 			throws AccountNotLinkedToTheClientException, AccountInRedException, SoldeIsNotCorrectException,
 			ClientDoNotExistException, AccountDoNoExistException {
+
 		List<Client> listClient = Database.getInstance().getListClient();
-		Client clientTmp = new Client();
 
-		boolean check1 = false;
-		boolean check2 = false;
-		boolean check3 = false;
-
-		if (amount <= 0)
+		if (!ManageException.AmountIsRight(amount))
 			throw new SoldeIsNotCorrectException("Le montant doit être supérieur à 0");
 
-		//Verification que le client existe (check1) + Si les types de compte en paramètre sont présent chez le client (check2 + check3 )
-		for (Client cl2 : listClient)
-		{
-			if (cl2.equals(cl1))
-			{
-				check1 = true;
-				clientTmp = cl2;
-				for (Account account : cl2.getListCount())
-				{
-					if (account.getType().equals(acc1))
-						check2 = true;
-					if (account.getType().equals(acc2))
-						check3 = true;
-				}
-				break;
-			}
-		}
+		Client clTmp = ManageException.checkClientExistInData(listClient, cl1);
 
-		if (!check1)
-			throw new ClientDoNotExistException("Le client n'existe pas");
+		if (clTmp == null)
+			throw new ClientDoNotExistException("Client n'existe pas");
 
-		if (!check2 || !check3)
-			throw new AccountNotLinkedToTheClientException("L'un des types de compte n'est pas présent chez le client");
+		if (!ManageException.checkAccountType(acc1))
+			throw new AccountDoNoExistException("Ce type de compte n'existe pas");
 
-		check1 = false;
-		check2 = false;
+		if (!ManageException.checkAccountType(acc2))
+			throw new AccountDoNoExistException("Ce type de compte n'existe pas");
 
-		//Verification de l'écriture du type de compte en paramètre
-		
-		for (AccountType type : AccountType.values())
-		{
-			if (acc1.equals(type))
-				check1 = true;
-			if (acc2.equals(type))
-				check2 = true;
-		}
-		if (!check1 || !check2)
-			throw new AccountDoNoExistException("L'un des types de compte n'existe pas");
+		if (!ManageException.AccountTypeIsLinkedToClient(clTmp, acc1))
+			throw new AccountNotLinkedToTheClientException("Le type de compte " + acc1 + " n'est pas présent chez le client");
 
-		List<Account> clAccList = clientTmp.getListCount();
+		if (!ManageException.AccountTypeIsLinkedToClient(clTmp, acc2))
+			throw new AccountNotLinkedToTheClientException("Le type de compte " + acc2 + " n'est pas présent chez le client");
+
+
+		List<Account> clAccList = clTmp.getListCount();
 		Account accTmp1 = new Account();
 		Account accTmp2 = new Account();
 
@@ -232,13 +163,14 @@ public class BankImpl implements IBank{
 		{
 			if (acc.getType().equals(acc1))
 			{
-				if (acc.getSolde() - amount < 0)
-					throw new AccountInRedException("Opération impossible. Découvert non autorisé");
+				if (ManageException.AccountIsInRed(acc, amount))
+					throw new AccountInRedException("Impossible de retirer, découvert non autorisé");
 				accTmp1 = acc;
 			}
 			if (acc.getType().equals(acc2))
 				accTmp2 = acc;
 		}
+
 		accTmp1.setSolde(accTmp1.getSolde() - amount);
 		accTmp2.setSolde(accTmp2.getSolde() + amount);
 	}
@@ -248,101 +180,73 @@ public class BankImpl implements IBank{
 			throws AccountNotLinkedToTheClientException, AccountInRedException, SoldeIsNotCorrectException,
 			ClientDoNotExistException, AccountDoNoExistException {
 		List<Client> listClient = Database.getInstance().getListClient();
-		Account accTmp1 = new Account();
-		Account accTmp2 = new Account();
-		
-		//check1 & check2 pour la vérification de l'existence des clients, check3 & check4 pour l'existence des comptes
-		boolean check1 = false;
-		boolean check2 = false;
-		boolean check3 = false;
-		boolean check4 = false;
-		
-		if (amount <= 0)
+
+		System.out.println("Count number 2 first param => " + cl2.getNom() + " " + cl2.getPrenom());
+
+		if (!ManageException.AmountIsRight(amount))
 			throw new SoldeIsNotCorrectException("Le montant doit être supérieur à 0");
-		
-		for (Client cl : listClient)
-		{
-			if (cl.equals(cl1))
-			{
-				check1 = true;
-				for (Account account : cl.getListCount())
-				{
-					if (account.equals(acc1))
-					{check3 = true;
-					if (!acc1.getClient().equals(cl1))					
-						throw new AccountNotLinkedToTheClientException("Le compte N°1 n'est pas lié au bon client");
-					accTmp1 = account;
-					}
-				}
-			}
-			if (cl.equals(cl2))
-			{
-				check2 = true;
-				for (Account account : cl.getListCount())
-				{
-					if (account.equals(acc2))
-					{
-						check4 = true;
-						if (!acc2.getClient().equals(cl2))
-							throw new AccountNotLinkedToTheClientException("Le compte N°2 n'est pas lié au bon client");
-						accTmp2 = account;
-					}
-				}
-			}
-		}
-		if (!check1 || !check2)
-			throw new ClientDoNotExistException("L'un des clients n'existe pas");
-			
-		if (!check3)
-			throw new AccountDoNoExistException("Le compte de " + cl1.getNom() + " n'existe pas");
-		
-		if (!check4)
-			throw new AccountDoNoExistException("Le compte de " + cl2.getNom() + " n'existe pas");
-		
-		if (accTmp1.getSolde() - amount < 0)
-			throw new AccountInRedException("Opération impossible. Découvert non autorisé");
-			
-		accTmp1.setSolde(accTmp1.getSolde() - amount);
-		accTmp2.setSolde(accTmp2.getSolde() + amount);
+
+		Client clTmp = ManageException.checkClientExistInData(listClient, cl1);
+		if (clTmp == null)
+			throw new ClientDoNotExistException("Client " + cl1.getPrenom()  + " n'existe pas");
+
+		Client clTmp2 = ManageException.checkClientExistInData(listClient, cl2);
+		if (clTmp2 == null)
+			throw new ClientDoNotExistException("Client " + cl2.getPrenom()  + " n'existe pas");
+
+		Account ac = ManageException.AccountExist(cl1.getListCount(), acc1);
+		if (ac == null)
+			throw new AccountDoNoExistException("Ce compte n'existe pas");
+
+		Account ac2 = ManageException.AccountExist(cl2.getListCount(), acc2);
+		if (ac2 == null)
+			throw new AccountDoNoExistException("Ce compte n'existe pas");
+
+		if (!ManageException.AccountIsLinkedToClient(cl1, acc1))
+			throw new AccountNotLinkedToTheClientException("Le compte N°1 n'est pas lié au bon client");
+
+		if (!ManageException.AccountIsLinkedToClient(cl2, acc2))
+			throw new AccountNotLinkedToTheClientException("Le compte N°2 n'est pas lié au bon client");
+
+		if (ManageException.AccountIsInRed(acc1, amount))
+			throw new AccountInRedException("Impossible de retirer, découvert non autorisé");
+
+		System.out.println("Count number 2 => " + ac2.getClient().getNom() + " " + ac2.getClient().getPrenom());
+		ac.setSolde(ac.getSolde() - amount);
+		ac2.setSolde(ac2.getSolde() + amount);
+		ManageException.updateDatabaseAccountToClientList(listClient, ac, clTmp);
+		ManageException.updateDatabaseAccountToClientList(listClient, ac2, clTmp2);
 	}
 
 	@Override
 	public int closeAccount(Account acc) throws AccountDoNoExistException {
 		List<Account> list = Database.getInstance().getListAcc();
-		int index = 0;
-		boolean check = false;
-		for (Account cmpt : list)
+
+		Account ac = ManageException.AccountExist(list, acc);
+		if (ac == null)
+			throw new AccountDoNoExistException("Ce compte n'existe pas");
+
+		Account acCl = new Account();		
+		Client cl = ac.getClient();		
+
+		for (Account cmpt : cl.getListCount())
 		{
-			if (acc.equals(cmpt))
-			{
-				check = true;
-				break;
-			}
-			index++;
+			if (ac.equals(cmpt))
+				acCl = cmpt;
 		}
-		if (check)
-		{
-			Client cl = list.get(index).getClient();
-			cl.getListCount().remove(list.get(index));
-			Database.getInstance().getListAcc().remove(list.get(index));
-			return acc.getSolde();
-		}
-		throw new AccountDoNoExistException("Ce compte n'existe pas");
+
+		cl.getListCount().remove(acCl);
+		Database.getInstance().getListAcc().remove(ac);
+		return ac.getSolde();
 	}
 
 	@Override
 	public void eraseClient(Client cl1) throws ClientStillHasAnAccountException, ClientDoNotExistException {
 		List<Client> list = Database.getInstance().getListClient();
-		boolean check = false;
 
-		for (Client cl : list)
-		{
-			if (cl.equals(cl1))
-				check = true;
-		}
-
-		if (!check)
-			throw new ClientDoNotExistException("Client non trouvé");
+		Client clTmp = ManageException.checkClientExistInData(list, cl1);
+		if (clTmp == null)
+			throw new ClientDoNotExistException("Client " + cl1.getPrenom()  + " n'existe pas");
 
 		if (cl1.getListCount().isEmpty())
 			Database.getInstance().getListClient().remove(cl1);
@@ -353,6 +257,12 @@ public class BankImpl implements IBank{
 	@Override
 	public String displayDatabase() {
 		return Database.getInstance().displayDatabase();
-		
+
+	}
+
+	@Override
+	public void emptyDatabase()
+	{
+		Database.getInstance().emptyData();
 	}
 }

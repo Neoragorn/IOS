@@ -36,6 +36,8 @@ public class ObjectFactory {
     private final static QName _DisplayDatabaseResponse_QNAME = new QName("http://bankInterface/", "displayDatabaseResponse");
     private final static QName _DisplaySolde_QNAME = new QName("http://bankInterface/", "displaySolde");
     private final static QName _DisplaySoldeResponse_QNAME = new QName("http://bankInterface/", "displaySoldeResponse");
+    private final static QName _EmptyDatabase_QNAME = new QName("http://bankInterface/", "emptyDatabase");
+    private final static QName _EmptyDatabaseResponse_QNAME = new QName("http://bankInterface/", "emptyDatabaseResponse");
     private final static QName _EraseClient_QNAME = new QName("http://bankInterface/", "eraseClient");
     private final static QName _EraseClientResponse_QNAME = new QName("http://bankInterface/", "eraseClientResponse");
     private final static QName _RecoverAccount_QNAME = new QName("http://bankInterface/", "recoverAccount");
@@ -159,6 +161,22 @@ public class ObjectFactory {
      */
     public DisplaySoldeResponse createDisplaySoldeResponse() {
         return new DisplaySoldeResponse();
+    }
+
+    /**
+     * Create an instance of {@link EmptyDatabase }
+     * 
+     */
+    public EmptyDatabase createEmptyDatabase() {
+        return new EmptyDatabase();
+    }
+
+    /**
+     * Create an instance of {@link EmptyDatabaseResponse }
+     * 
+     */
+    public EmptyDatabaseResponse createEmptyDatabaseResponse() {
+        return new EmptyDatabaseResponse();
     }
 
     /**
@@ -451,6 +469,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://bankInterface/", name = "displaySoldeResponse")
     public JAXBElement<DisplaySoldeResponse> createDisplaySoldeResponse(DisplaySoldeResponse value) {
         return new JAXBElement<DisplaySoldeResponse>(_DisplaySoldeResponse_QNAME, DisplaySoldeResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link EmptyDatabase }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://bankInterface/", name = "emptyDatabase")
+    public JAXBElement<EmptyDatabase> createEmptyDatabase(EmptyDatabase value) {
+        return new JAXBElement<EmptyDatabase>(_EmptyDatabase_QNAME, EmptyDatabase.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link EmptyDatabaseResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://bankInterface/", name = "emptyDatabaseResponse")
+    public JAXBElement<EmptyDatabaseResponse> createEmptyDatabaseResponse(EmptyDatabaseResponse value) {
+        return new JAXBElement<EmptyDatabaseResponse>(_EmptyDatabaseResponse_QNAME, EmptyDatabaseResponse.class, null, value);
     }
 
     /**
