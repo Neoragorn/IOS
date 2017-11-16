@@ -64,6 +64,7 @@ public class Database {
 			for (Account acc : cl.getListCount())
 			{
 				information = information + "account of client : " + acc.getType() + "\n";
+				information = information + "solde : " + acc.getSolde() + "\n";
 			}
 		}
 		

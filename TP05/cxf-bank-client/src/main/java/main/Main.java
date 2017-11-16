@@ -1,4 +1,4 @@
-package snippet;
+package main;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -15,6 +15,7 @@ import ios.client.AccountType;
 import ios.client.Client;
 import ios.client.ClientAlreadyExistException_Exception;
 import ios.client.ClientDoNotExistException_Exception;
+import ios.client.ClientStillHasAnAccountException_Exception;
 import ios.client.IBank;
 import ios.client.SoldeIsNotCorrectException_Exception;
 import ios.client.TypeOfAccountAlreadyExistForClientException_Exception;
@@ -22,7 +23,7 @@ import ios.client.TypeOfAccountDoNotExistException_Exception;
 
 public class Main {
 	
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClientAlreadyExistException_Exception, TypeOfAccountDoNotExistException_Exception, ClientDoNotExistException_Exception, TypeOfAccountAlreadyExistForClientException_Exception, SoldeIsNotCorrectException_Exception, AccountDoNoExistException_Exception, AccountInRedException_Exception, AccountNotLinkedToTheClientException_Exception, DatatypeConfigurationException
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClientAlreadyExistException_Exception, TypeOfAccountDoNotExistException_Exception, ClientDoNotExistException_Exception, TypeOfAccountAlreadyExistForClientException_Exception, SoldeIsNotCorrectException_Exception, AccountDoNoExistException_Exception, AccountInRedException_Exception, AccountNotLinkedToTheClientException_Exception, DatatypeConfigurationException, ClientStillHasAnAccountException_Exception
 	{
 		
 		BankServiceClient bank = new BankServiceClient();
@@ -83,9 +84,23 @@ public class Main {
 		accVinz = ibank.recoverAccount(vinz, AccountType.LIVRET_A);
 		accSoso = ibank.recoverAccount(soso, AccountType.LIVRET_A);
 		
+		
 		ibank.virementBetweenAcc(soso, accSoso, vinz, accVinz, 10);
 		
 
 		System.out.println(ibank.displayDatabase());
+		
+		/* Suppression du compte de Vinz */
+		vinz = ibank.recoverClient("Vinz", "Pwet", date2);	
+		accVinz = ibank.recoverAccount(vinz, AccountType.LIVRET_A);
+		ibank.closeAccount(accVinz);
+		
+		System.out.println(ibank.displayDatabase());
+
+		/*suppression du client Vinz */
+		ibank.eraseClient(vinz);
+		
+		System.out.println(ibank.displayDatabase());
+		
 	}
 }

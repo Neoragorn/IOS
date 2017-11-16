@@ -1,4 +1,4 @@
-package snippet;
+package main;
 
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;

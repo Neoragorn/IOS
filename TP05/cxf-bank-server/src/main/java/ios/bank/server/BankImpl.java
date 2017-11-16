@@ -93,6 +93,7 @@ public class BankImpl implements IBank{
 		if (ac == null)
 			throw new AccountDoNoExistException("Ce compte n'existe pas");
 		ac.setSolde(acc.getSolde() + amount);
+		ManageException.updateDatabaseAccountToClientList(Database.getInstance().getListClient(), ac, ac.getClient());
 		return ac.getSolde();
 	}
 
@@ -112,6 +113,7 @@ public class BankImpl implements IBank{
 			throw new AccountInRedException("Impossible de retirer, découvert non autorisé");
 
 		ac.setSolde(acc.getSolde() - amount);
+		ManageException.updateDatabaseAccountToClientList(Database.getInstance().getListClient(), ac, ac.getClient());
 		return acc.getSolde();
 	}
 
@@ -173,6 +175,8 @@ public class BankImpl implements IBank{
 
 		accTmp1.setSolde(accTmp1.getSolde() - amount);
 		accTmp2.setSolde(accTmp2.getSolde() + amount);
+		ManageException.updateDatabaseAccountToClientList(Database.getInstance().getListClient(), accTmp1, cl1);
+		ManageException.updateDatabaseAccountToClientList(Database.getInstance().getListClient(), accTmp2, cl1);
 	}
 
 	@Override
@@ -181,7 +185,6 @@ public class BankImpl implements IBank{
 			ClientDoNotExistException, AccountDoNoExistException {
 		List<Client> listClient = Database.getInstance().getListClient();
 
-		System.out.println("Count number 2 first param => " + cl2.getNom() + " " + cl2.getPrenom());
 
 		if (!ManageException.AmountIsRight(amount))
 			throw new SoldeIsNotCorrectException("Le montant doit être supérieur à 0");
@@ -211,9 +214,10 @@ public class BankImpl implements IBank{
 		if (ManageException.AccountIsInRed(acc1, amount))
 			throw new AccountInRedException("Impossible de retirer, découvert non autorisé");
 
-		System.out.println("Count number 2 => " + ac2.getClient().getNom() + " " + ac2.getClient().getPrenom());
+
 		ac.setSolde(ac.getSolde() - amount);
 		ac2.setSolde(ac2.getSolde() + amount);
+
 		ManageException.updateDatabaseAccountToClientList(listClient, ac, clTmp);
 		ManageException.updateDatabaseAccountToClientList(listClient, ac2, clTmp2);
 	}
@@ -221,14 +225,22 @@ public class BankImpl implements IBank{
 	@Override
 	public int closeAccount(Account acc) throws AccountDoNoExistException {
 		List<Account> list = Database.getInstance().getListAcc();
-
+		List<Client> listClient = Database.getInstance().getListClient();
+		
 		Account ac = ManageException.AccountExist(list, acc);
+
 		if (ac == null)
 			throw new AccountDoNoExistException("Ce compte n'existe pas");
 
-		Account acCl = new Account();		
-		Client cl = ac.getClient();		
-
+		Account acCl = new Account();
+		Client cl = null;
+		
+		for (Client clTmp : listClient)
+		{
+			if (clTmp.equals(ac.getClient()))
+				cl = clTmp;
+		}
+		
 		for (Account cmpt : cl.getListCount())
 		{
 			if (ac.equals(cmpt))
@@ -247,9 +259,12 @@ public class BankImpl implements IBank{
 		Client clTmp = ManageException.checkClientExistInData(list, cl1);
 		if (clTmp == null)
 			throw new ClientDoNotExistException("Client " + cl1.getPrenom()  + " n'existe pas");
-
-		if (cl1.getListCount().isEmpty())
-			Database.getInstance().getListClient().remove(cl1);
+		
+		if (clTmp.getListCount().isEmpty())
+		{
+			Database.getInstance().getListClient().remove(clTmp);
+			return;
+		}
 
 		throw new ClientStillHasAnAccountException("Suppression du client impossible. Le client possède toujours des comptes non-fermés");		
 	}
