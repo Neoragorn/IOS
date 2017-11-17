@@ -3,8 +3,6 @@ package Model;
 import java.util.Calendar;
 import java.util.List;
 
-import Exception.AccountInRedException;
-import Exception.ClientAlreadyExistException;
 import persistence.Database;
 
 public class ManageException {
