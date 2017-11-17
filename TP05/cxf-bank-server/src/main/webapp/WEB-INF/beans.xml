@@ -12,5 +12,4 @@
           id="Bank" 
           implementor="ios.bank.server.Bank" 
           address="/cxf-bank-server" />
-          
 </beans>
